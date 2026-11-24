@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#17212b" />
+    <title>Framewise demo: client feedback recordings to reviewed GitHub issues</title>
+    <meta name="description" content="Replay of a real Framewise run: a client feedback recording analyzed by Gemini and routed into reviewable GitHub issues." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">FRAMEWISE / HOSTED REPLAY</p>
+        <h1>Framewise</h1>
+        <p class="lede">Turns client feedback recordings into reviewed GitHub issues, with timestamps and evidence.</p>
+        <p class="demo-note">Replay of a real Gemini analysis. Publishing is disabled in this hosted demo.</p>
+      </div>
+      <a class="button button-secondary" href="https://github.com/heykay-47/crework" rel="noopener">Source on GitHub</a>
+    </header>
+
+    <main id="app" class="app-shell">
+      <p id="load-error" class="inline-error" role="alert" hidden></p>
+
+      <section class="panel player-panel" aria-labelledby="video-heading">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">01 / SOURCE RECORDING</p>
+            <h2 id="video-heading">Loading recording...</h2>
+          </div>
+        </div>
+        <div class="video-stage" id="video-stage"></div>
+        <div class="timeline" aria-labelledby="timeline-label">
+          <div class="timeline-axis">
+            <span id="timeline-label">Evidence timeline</span>
+            <span><span id="timeline-start">00:00:00</span> - <span id="timeline-end">00:00:00</span></span>
+          </div>
+          <div class="timeline-track" id="timeline-track"></div>
+          <ul class="legend" id="legend"></ul>
+        </div>
+      </section>
+
+      <section class="panel analysis-strip" aria-labelledby="analysis-heading">
+        <p class="eyebrow">02 / ANALYSIS</p>
+        <h2 id="analysis-heading" class="sr-only">Analysis</h2>
+        <dl class="stats" id="stats"></dl>
+        <p class="analysis-summary" id="analysis-summary"></p>
+      </section>
+
+      <section aria-labelledby="review-heading">
+        <div class="review-heading">
+          <p class="eyebrow">03 / REVIEW</p>
+          <h2 id="review-heading">Routed results</h2>
+          <p class="muted">Pick a result to inspect its evidence. Only candidates can be approved.</p>
+        </div>
+        <div class="review-layout">
+          <nav class="panel review-queue" aria-label="Routed results" id="queue"></nav>
+          <article class="panel review-detail" id="detail" aria-live="polite"></article>
+        </div>
+      </section>
+
+      <section class="panel about-panel" aria-labelledby="how-heading">
+        <h2 id="how-heading">How it works</h2>
+        <ol class="how-list">
+          <li>Gemini video analysis of the recording</li>
+          <li>Schema and policy validation</li>
+          <li>Timestamped evidence for every result</li>
+          <li>Human approval of the exact issue</li>
+          <li>GitHub issue</li>
+        </ol>
+        <details class="context-details">
+          <summary>Context given to Gemini</summary>
+          <pre id="project-context"></pre>
+        </details>
+      </section>
+    </main>
+
+    <footer class="app-footer muted">
+      Framewise by heykay-47. <a href="https://github.com/heykay-47/crework" rel="noopener">github.com/heykay-47/crework</a>
+    </footer>
+    <script src="app.js" defer></script>
+  </body>
+</html>

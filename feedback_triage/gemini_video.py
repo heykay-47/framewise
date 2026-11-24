@@ -6,7 +6,7 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any, Protocol, cast
 
-from feedback_triage.models import AnalysisWireResult, VerifiedAnalysis, parse_wire_analysis
+from feedback_triage.models import AnalysisWireResult, UrlVideoAnalysis, VerifiedAnalysis, parse_wire_analysis
 from feedback_triage.timing import TimingCallback, report_timing
 
 
@@ -32,6 +32,8 @@ PROMPT = """Inspect the Feedback Recording's speech and visuals. Return only one
   }]
 }
 Use null for unknown nullable fields. Each evidence item must have client_quote or visual_observation. Return timestamp-grounded Observations only. Every evidence timestamp must be a colon-delimited timecode string in HH:MM:SS[.fraction] form, with two-digit minutes and seconds; use as many hour digits as needed. Never return numeric elapsed seconds. Convert clock positions exactly: 1:26 becomes "00:01:26.000", 1:40 becomes "00:01:40.000", and 2:10 becomes "00:02:10.000", never "126", "140", or "210". Preserve ambiguity, do not invent requested outcomes or acceptance criteria, and use one topic_key for repeated mentions. Cover every distinct feedback mention that is supported by speech or visible UI. Treat a clearly visible authored anomaly without an explicit client problem statement as a possible bug with intent none, medium confidence, and visually grounded evidence; reserve low confidence for cases where the evidence itself is unclear.
+
+Feedback comes only from the people reviewing the work. When the person presenting or demoing the work describes what they built, changed, or plan to change (for example "I removed the borders" or "this now stays in place"), that is not feedback: use intent none and type commentary, even when it describes a change. A reviewer who asks for, objects to, or questions something in the presented work is giving feedback.
 
 Apply these field rules:
 - explicit_change: type MUST be change_request or feature_request. requested_outcome states the client's requested change. acceptance_criteria contains only a separate test condition the client explicitly states; merely restating the change is not a criterion.
@@ -296,6 +298,67 @@ def run_stored_stream(
         return retrieve_verified_interaction(client, interaction_id, on_stage=on_stage)
     finally:
         report_timing(on_timing, "analysis_seconds", time.monotonic() - analysis_started)
+
+
+def _video_input_tokens(interaction: Any) -> int:
+    usage = _value(interaction, "usage") or _value(interaction, "usage_metadata")
+    total = 0
+    for item in _value(usage, "input_tokens_by_modality") or []:
+        tokens = _value(item, "tokens")
+        if str(_value(item, "modality")).lower() == "video" and isinstance(tokens, int) and not isinstance(tokens, bool):
+            total += tokens
+    return total
+
+
+def analyze_video_url(
+    client: GeminiClient,
+    url: str,
+    *,
+    prompt: str = PROMPT,
+    project_context: str = "",
+    deadline_seconds: float = 600,
+) -> UrlVideoAnalysis:
+    """Analyze a public video URL (such as YouTube) that Gemini fetches itself.
+
+    Uses static low-resolution processing: agentic processing of YouTube URLs fails on this model
+    with a persistent 503, while static processing of a 14-minute video fits the free-tier token
+    budget. The interaction must complete, report counted video input tokens, and return
+    schema-valid output; anything else is rejected.
+    """
+
+    def create() -> Any:
+        return client.interactions.create(
+            model=MODEL,
+            input=[
+                {"type": "video", "uri": url, "resolution": "low"},
+                {"type": "text", "text": compose_prompt(prompt, project_context)},
+            ],
+            response_format={
+                "text": {
+                    "mime_type": "application/json",
+                    "schema": AnalysisWireResult.model_json_schema(),
+                }
+            },
+        )
+
+    try:
+        interaction = _retry_call(create, deadline=time.monotonic() + deadline_seconds)
+    except Exception as error:
+        raise InteractionUnrecoverable(str(error)) from error
+    status = _value(interaction, "status")
+    if status != "completed":
+        raise UntrustedInteraction(f"interaction status is {status}")
+    video_tokens = _video_input_tokens(interaction)
+    if video_tokens <= 0:
+        raise ProcessingUnverified("completed interaction reports no video input tokens")
+    output_text = _value(interaction, "output_text")
+    if not isinstance(output_text, str):
+        raise UntrustedInteraction("completed interaction has no text output")
+    return UrlVideoAnalysis(
+        analysis=parse_wire_analysis(output_text),
+        video_input_tokens=video_tokens,
+        gemini_usage=_usage(interaction),
+    )
 
 
 def create_client() -> GeminiClient:

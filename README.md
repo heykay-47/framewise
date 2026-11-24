@@ -2,6 +2,8 @@
 
 **Turn client screen recordings into reviewed GitHub issues, with timestamps and visual evidence.**
 
+**[Live demo](https://framewise-triage.vercel.app)**: a replay of a real Gemini analysis of a public team feedback call.
+
 Clients often send feedback as a video: a requested copy change, a broken menu, a vague reaction, and the same bug mentioned twice. Someone still has to watch it, work out what needs doing, and write the tickets.
 
 Framewise handles that first pass. It uses Gemini to analyze what the client says and what appears on screen, groups repeated feedback, and drafts work for a person to review. It creates GitHub issues only after explicit approval. Questions and unclear feedback do not become tickets automatically.
@@ -94,6 +96,22 @@ docker run --rm --user "$(id -u):$(id -g)" \
 Open **http://127.0.0.1:8000**. Set `GITHUB_REPOSITORY` to `owner/repository` if you intend to publish. Analysis and publishing use external APIs and may incur usage charges.
 
 The Docker image and Python package still use the internal name `client-feedback-triage`. See the [usage guide](docs/usage.md) for analysis-only CLI commands, review and publishing, the three-run acceptance cycle, and recovery options.
+
+### Hosted replay demo
+
+`site/` is a static, read-only replay of one real analysis of a public YouTube recording. It has no backend, database, or hosted keys, and publishing is disabled. Gemini reads the YouTube URL directly, so the video is never downloaded or uploaded.
+
+Build its payload once, with an exported `GEMINI_API_KEY`:
+
+```bash
+uv run python scripts/build-demo.py \
+  --youtube "https://www.youtube.com/watch?v=VIDEO_ID" \
+  --duration 412 --title "Client feedback call" --context docs/demo-context.md
+```
+
+`--duration` is the video length in seconds as shown on YouTube. Policy checks Gemini's timestamps against it, the job FFprobe does for local files. `--context` describes the product shown in the recording. The verified analysis is cached in `output/demo/`, so rerunning only rebuilds `site/demo.json`. Pass `--reanalyze` to call Gemini again.
+
+To deploy, create a Vercel project from this repository with **Root Directory** set to `site`, or run `npx vercel --prod` from `site/`. Use a Gemini key from a project with no billing account attached. Requests over the free quota then fail instead of being charged.
 
 ### Development checks
 

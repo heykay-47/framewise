@@ -1,0 +1,129 @@
+{
+  "schema_version": "1",
+  "video": {
+    "youtube_id": "3swiyH_au6c",
+    "url": "https://www.youtube.com/watch?v=3swiyH_au6c",
+    "title": "UX Group Feedback: Threaded discussions (GitLab Unfiltered)",
+    "duration_seconds": 865.0
+  },
+  "project_context": "# Project context: GitLab comment threads redesign\n\nThe recording is a public GitLab UX team call (\"UX Group Feedback: Threaded discussions\", GitLab Unfiltered on YouTube). A product designer screen-shares a visual redesign of the threaded discussion and comment UI that appears on GitLab issues and merge requests, and teammates react and give feedback.\n\nTreat the presenting designer as the delivery team and the other participants' spoken reactions, requests, concerns, and questions as the feedback to triage. The product is GitLab's web UI, specifically discussion threads: comments, replies, resolving threads, avatars, timestamps, and related controls.\n\nThe redesign is a work-in-progress mockup, so feedback about the mockup itself is in scope. General conversation, meeting logistics, and the presenter's own explanation of the design are not change requests.\n",
+  "analysis": {
+    "model": "gemini-3.5-flash-lite",
+    "summary": "Marcel presents a redesign of discussion threads and replies on merge requests and issues, simplifying borders and improving layout. Teammates discuss visual redundancy of the 'commented' label, hover actions, indentation, and mobile view alignment.",
+    "video_input_tokens": 78720,
+    "usage": {
+      "total_tokens": 80774
+    },
+    "timings": {
+      "analysis_seconds": 23.85
+    }
+  },
+  "results": [
+    {
+      "route": "candidate",
+      "candidate_id": "cand_34516b2da9f17064",
+      "topic_key": "commented-label-redundancy",
+      "type": "change_request",
+      "intent": "explicit_change",
+      "title": "Remove repeated 'commented' label",
+      "component": null,
+      "summary": "Shane suggests removing repeated instances of the word 'commented' in comment threads since it is implied.",
+      "requested_outcome": "Remove the 'commented' label from comments where it repeats unnecessarily.",
+      "acceptance_criteria": [],
+      "clarification_question": null,
+      "confidence": "high",
+      "evidence": [
+        {
+          "start_seconds": 410.0,
+          "end_seconds": 431.0,
+          "keyframe_seconds": null,
+          "client_quote": "So here we say commented, commented, commented over and over when it seems like that's just implied... I noticed on the right that it had been removed.",
+          "visual_observation": null
+        }
+      ],
+      "evidence_frame_seconds": 420.5,
+      "rationale": "Shane explicitly notes that repeating 'commented' is unnecessary and asks if it is planned for removal.",
+      "approval_eligible": true,
+      "visually_inferred": false,
+      "reason_code": null,
+      "route_label": "Candidate",
+      "route_description": "Ready for an explicit Approval decision.",
+      "issue_preview": {
+        "title": "Remove repeated 'commented' label",
+        "body": "<!-- crework:v1 source_sha256=e424c62c5043310eb932c3dd83e41292ae0f0812738728e59ee24583aea3a677 candidate_id=cand_34516b2da9f17064 -->\n\n## Summary\nShane suggests removing repeated instances of the word 'commented' in comment threads since it is implied.\n\n## Requested outcome\nRemove the 'commented' label from comments where it repeats unnecessarily.\n\n## Acceptance criteria\n- No acceptance criterion was provided.\n\n## Component\nNot specified\n\n## Source evidence\n- Source SHA-256: `e424c62c5043310eb932c3dd83e41292ae0f0812738728e59ee24583aea3a677`\n- Candidate ID: `cand_34516b2da9f17064`\n- Topic: `commented-label-redundancy`\n- Evidence Frame: 420.5\n- Visually inferred: `False`\n- 410.000s to 431.000s: So here we say commented, commented, commented over and over when it seems like that's just implied... I noticed on the right that it had been removed.; visual: (no visual observation)\n\n## Triage context\n- Type: `change_request`\n- Intent: `explicit_change`\n- Confidence: `high`\n- Rationale: Shane explicitly notes that repeating 'commented' is unnecessary and asks if it is planned for removal.",
+        "labels": []
+      }
+    },
+    {
+      "route": "candidate",
+      "candidate_id": "cand_b45460eb87d6152e",
+      "topic_key": "hover-action-icons",
+      "type": "change_request",
+      "intent": "explicit_change",
+      "title": "Show action icons on hover",
+      "component": null,
+      "summary": "Shane asks why action icons on comments are always visible instead of appearing on hover, considering pages have a lot of content.",
+      "requested_outcome": "Show comment action icons only when hovering over a particular comment.",
+      "acceptance_criteria": [],
+      "clarification_question": null,
+      "confidence": "high",
+      "evidence": [
+        {
+          "start_seconds": 506.0,
+          "end_seconds": 529.0,
+          "keyframe_seconds": null,
+          "client_quote": "Why can't it be that when I hover over a particular comment, then I see the action icons... like do we need them always visible like that?",
+          "visual_observation": null
+        }
+      ],
+      "evidence_frame_seconds": 517.5,
+      "rationale": "Shane explicitly questions the constant visibility of comment action icons and proposes showing them on hover.",
+      "approval_eligible": true,
+      "visually_inferred": false,
+      "reason_code": null,
+      "route_label": "Candidate",
+      "route_description": "Ready for an explicit Approval decision.",
+      "issue_preview": {
+        "title": "Show action icons on hover",
+        "body": "<!-- crework:v1 source_sha256=e424c62c5043310eb932c3dd83e41292ae0f0812738728e59ee24583aea3a677 candidate_id=cand_b45460eb87d6152e -->\n\n## Summary\nShane asks why action icons on comments are always visible instead of appearing on hover, considering pages have a lot of content.\n\n## Requested outcome\nShow comment action icons only when hovering over a particular comment.\n\n## Acceptance criteria\n- No acceptance criterion was provided.\n\n## Component\nNot specified\n\n## Source evidence\n- Source SHA-256: `e424c62c5043310eb932c3dd83e41292ae0f0812738728e59ee24583aea3a677`\n- Candidate ID: `cand_b45460eb87d6152e`\n- Topic: `hover-action-icons`\n- Evidence Frame: 517.5\n- Visually inferred: `False`\n- 506.000s to 529.000s: Why can't it be that when I hover over a particular comment, then I see the action icons... like do we need them always visible like that?; visual: (no visual observation)\n\n## Triage context\n- Type: `change_request`\n- Intent: `explicit_change`\n- Confidence: `high`\n- Rationale: Shane explicitly questions the constant visibility of comment action icons and proposes showing them on hover.",
+        "labels": []
+      }
+    },
+    {
+      "route": "withheld_result",
+      "candidate_id": "cand_8c88611668a3a486",
+      "topic_key": "thread-indentation",
+      "type": "commentary",
+      "intent": "none",
+      "title": "Positive feedback on thread indentation",
+      "component": null,
+      "summary": "Cynthia expresses appreciation for the indentation used in the merge request discussion version.",
+      "requested_outcome": null,
+      "acceptance_criteria": [],
+      "clarification_question": null,
+      "confidence": "high",
+      "evidence": [
+        {
+          "start_seconds": 600.0,
+          "end_seconds": 607.0,
+          "keyframe_seconds": null,
+          "client_quote": "I really liked the indentation that you have on the MR kind of version of it.",
+          "visual_observation": null
+        }
+      ],
+      "evidence_frame_seconds": 603.5,
+      "rationale": "Cynthia shares positive feedback on a visual pattern without requesting a change.",
+      "approval_eligible": false,
+      "visually_inferred": false,
+      "reason_code": "non_actionable_commentary",
+      "route_label": "Withheld Result",
+      "route_description": "Held back by policy; it cannot be approved.",
+      "issue_preview": null
+    }
+  ],
+  "proof_issue_urls": [
+    "https://github.com/heykay-47/crework-feedback-demo/issues/4",
+    "https://github.com/heykay-47/crework-feedback-demo/issues/5",
+    "https://github.com/heykay-47/crework-feedback-demo/issues/6"
+  ]
+}

@@ -254,6 +254,19 @@ class VerifiedAnalysis(StrictModel):
         return self
 
 
+class UrlVideoAnalysis(StrictModel):
+    """Verified analysis of a public video URL processed statically.
+
+    Static processing emits no processing steps, so the proof that Gemini read the video is the
+    video input token count it reports. Kept apart from VerifiedAnalysis, whose processing-pair
+    proof the Run Ledger and acceptance cycle rely on.
+    """
+
+    analysis: AnalysisResult
+    video_input_tokens: int = Field(gt=0)
+    gemini_usage: dict[str, int] | None = None
+
+
 class RoutedResult(StrictModel):
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
 
